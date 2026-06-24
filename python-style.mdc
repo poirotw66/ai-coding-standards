@@ -1,0 +1,106 @@
+---
+
+description: Python style, clean code, naming, functions, error handling, and system design rules.
+globs:
+
+* "**/*.py"
+  alwaysApply: true
+
+---
+
+# Python Style and Clean Code Rules
+
+## Language and Text Rules
+
+* Simplified Chinese must not appear anywhere in source code.
+* All code comments must be written in English.
+* All docstrings must be written in English.
+* All variable names, function names, class names, test names, fixture names, and module names must be written in English.
+* If Chinese text is required for user-facing labels, reports, UI copy, or output messages, use Traditional Chinese only.
+
+## Python Style Preferences
+
+* Use 4 spaces for indentation.
+* Use complete type hints for all functions, including return types.
+* Prefer f-strings over `.format()` or string concatenation.
+* Prefer explicit, readable code over clever or overly compact code.
+* Avoid hidden global state unless there is a clear and documented reason.
+* Avoid unnecessary abstractions.
+* Remove dead code, unused imports, obsolete comments, and redundant logic.
+
+## Naming
+
+* Use intention-revealing names.
+* Names should explain why the object exists, what it does, and how it is used.
+* Class names must be nouns or noun phrases.
+* Avoid vague class names such as `Manager`, `Data`, `Processor`, `Helper`, or `Utils` unless the responsibility is truly precise.
+* Function names must be verbs or verb phrases.
+* Use searchable names.
+* Avoid single-letter variables except for very small local scopes or conventional mathematical notation.
+* Avoid Hungarian notation, type prefixes, or other name encodings. Use type hints instead.
+
+## Functions
+
+* Keep functions small and focused.
+* A function should usually be no longer than 20 logical lines.
+* Each function must do one thing at one level of abstraction.
+* Prefer zero, one, or two arguments.
+* Avoid three or more arguments. Introduce a parameter object, dataclass, or configuration object when needed.
+* Avoid hidden side effects.
+* Follow Command Query Separation:
+
+  * A command changes state and should not return data unnecessarily.
+  * A query returns data and should not change state.
+* Extract complex conditions into named predicates.
+* Extract deeply nested logic into smaller functions.
+* Prefer early returns over deeply nested control flow.
+
+## Error Handling
+
+* Prefer exceptions over error codes.
+* Do not silently swallow exceptions.
+* Keep `try` / `except` blocks small.
+* Extract error handling into dedicated functions when it improves readability.
+* Avoid returning or passing `None` when a clearer design is possible.
+* Prefer exceptions, explicit result objects, or special case objects over repeated null checks.
+* If `None` is unavoidable, represent it explicitly in the type hint with `Optional[...]` and handle it close to the boundary.
+
+## Formatting and Structure
+
+* Use the newspaper metaphor:
+
+  * High-level concepts should appear near the top.
+  * Implementation details should appear further down.
+* Keep closely related code vertically near each other.
+* Separate public API, orchestration logic, domain logic, and low-level details.
+* Apply the Boy Scout Rule: leave code cleaner than you found it.
+
+## Class Design
+
+* Follow the Single Responsibility Principle.
+* A class should have one clear reason to change.
+* Prefer high cohesion:
+
+  * Instance variables should be used by most methods.
+  * Avoid classes that only group unrelated behavior.
+* Avoid train-wreck calls such as `a.get_b().get_c().do_something()`.
+* Follow the Law of Demeter:
+
+  * A module should not depend on the internal structure of objects it collaborates with.
+* Prefer composition over inheritance unless inheritance models a true subtype relationship.
+
+## System Design
+
+* Separate startup, wiring, configuration, and runtime behavior.
+* Keep object construction in factories, builders, dependency containers, or application entry points.
+* Business logic should receive dependencies from the outside.
+* Use dependency injection to provide collaborators instead of creating them deep inside business logic.
+* Avoid mixing I/O, data transformation, validation, and business rules in the same function.
+* Keep boundaries explicit:
+
+  * External APIs
+  * Databases
+  * Filesystems
+  * Model inference
+  * User interfaces
+  * Reporting outputs

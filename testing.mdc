@@ -1,0 +1,82 @@
+---
+
+description: pytest testing rules and test quality standards.
+globs:
+
+* "**/test_*.py"
+* "**/*_test.py"
+* "**/tests/**/*.py"
+  alwaysApply: true
+
+---
+
+# Python Testing Rules
+
+## Testing Framework
+
+* Use `pytest` for all tests.
+* Do not use `unittest` unless maintaining legacy code that already depends on it.
+* Test code must be as clean and maintainable as production code.
+
+## Test Design
+
+* Each test should verify one concept.
+* Test names should describe behavior, not implementation.
+* Prefer Arrange-Act-Assert structure.
+* Tests should be readable without requiring knowledge of internal implementation details.
+* Prefer deterministic inputs and outputs.
+* Tests should not depend on execution order.
+* Tests should not require network access unless explicitly marked as integration tests.
+
+## F.I.R.S.T. Principles
+
+Tests must be:
+
+* Fast
+* Independent
+* Repeatable
+* Self-validating
+* Timely
+
+## Fixtures and Setup
+
+* Use fixtures for reusable setup.
+* Keep fixtures small and focused.
+* Avoid fixture chains that make tests hard to understand.
+* Prefer explicit local setup when it improves test readability.
+* Avoid shared mutable state across tests.
+
+## Mocking
+
+* Avoid overusing mocks.
+* Mock external boundaries, not internal implementation details.
+* Good mock targets include:
+
+  * External APIs
+  * Databases
+  * Filesystems
+  * Network calls
+  * Time-dependent behavior
+  * Model inference services
+* Do not mock code just to make fragile implementation-specific assertions.
+
+## Assertions
+
+* Use clear, direct assertions.
+* Avoid multiple unrelated assertions in the same test.
+* Prefer asserting observable behavior over private implementation details.
+* Use `pytest.raises` for expected exceptions.
+* Avoid vague assertions such as checking only that a result is not `None`.
+
+## Test Data
+
+* Keep test data minimal and meaningful.
+* Use descriptive names for test inputs and expected outputs.
+* Avoid random values unless the randomness is seeded and intentional.
+* Do not use production data in tests unless it is anonymized and explicitly approved.
+
+## Language Rules for Tests
+
+* Simplified Chinese must not appear anywhere in test code.
+* Test names, fixtures, comments, and docstrings must be written in English.
+* If Chinese user-facing expected output is required, use Traditional Chinese only.

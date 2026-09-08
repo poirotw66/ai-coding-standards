@@ -1,12 +1,9 @@
 ---
-
 description: Data analysis, statistics, visualization, and notebook rules.
 globs:
-
-* "**/*.py"
-* "**/*.ipynb"
-  alwaysApply: true
-
+  - "**/*.py"
+  - "**/*.ipynb"
+alwaysApply: true
 ---
 
 # Data Analysis and Visualization Rules

@@ -1,13 +1,10 @@
 ---
-
 description: pytest testing rules and test quality standards.
 globs:
-
-* "**/test_*.py"
-* "**/*_test.py"
-* "**/tests/**/*.py"
-  alwaysApply: true
-
+  - "**/test_*.py"
+  - "**/*_test.py"
+  - "**/tests/**/*.py"
+alwaysApply: true
 ---
 
 # Python Testing Rules
@@ -20,11 +17,15 @@ globs:
 
 ## Test Design
 
+* Add or update tests for every meaningful behavior change.
+* Test observable behavior rather than private implementation details.
+* Cover the happy path, important edge cases, and expected failure paths.
+* Add a regression test when fixing a defect whenever practical.
 * Each test should verify one concept.
-* Test names should describe behavior, not implementation.
+* Test names should describe the scenario and expected outcome.
 * Prefer Arrange-Act-Assert structure.
-* Tests should be readable without requiring knowledge of internal implementation details.
-* Prefer deterministic inputs and outputs.
+* Keep tests deterministic, isolated, and readable.
+* Do not use arbitrary sleeps to coordinate tests.
 * Tests should not depend on execution order.
 * Tests should not require network access unless explicitly marked as integration tests.
 
@@ -41,15 +42,15 @@ Tests must be:
 ## Fixtures and Setup
 
 * Use fixtures for reusable setup.
-* Keep fixtures small and focused.
+* Keep fixtures small, focused, and intention-revealing.
 * Avoid fixture chains that make tests hard to understand.
 * Prefer explicit local setup when it improves test readability.
 * Avoid shared mutable state across tests.
 
 ## Mocking
 
-* Avoid overusing mocks.
-* Mock external boundaries, not internal implementation details.
+* Mock only external boundaries or expensive nondeterministic collaborators.
+* Avoid over-mocking the unit under test.
 * Good mock targets include:
 
   * External APIs
@@ -74,6 +75,11 @@ Tests must be:
 * Use descriptive names for test inputs and expected outputs.
 * Avoid random values unless the randomness is seeded and intentional.
 * Do not use production data in tests unless it is anonymized and explicitly approved.
+
+## Failure Handling
+
+* Do not delete, skip, or weaken a failing test merely to make the suite pass.
+* If a test cannot be run, state exactly why and what remains unverified.
 
 ## Language Rules for Tests
 

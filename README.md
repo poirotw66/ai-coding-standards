@@ -1,12 +1,14 @@
 # cursor-rule
 
-Personal [Cursor](https://cursor.com) rules for Python development, testing, and data analysis.
+Personal [Cursor](https://cursor.com) rules for engineering workflow, Python development, testing, and data analysis.
 
 ## Rules
 
 | File | Scope | Description |
 |------|-------|-------------|
-| [`python-style.mdc`](python-style.mdc) | `**/*.py` | Python style, clean code, naming, functions, error handling, and system design |
+| [`engineering-standards.mdc`](engineering-standards.mdc) | Always | Change planning, documentation, git hygiene, anti-patterns, and definition of done |
+| [`python-style.mdc`](python-style.mdc) | `**/*.py` | Language, clean code, naming, functions, modules, classes, and Python conventions |
+| [`system-design.mdc`](system-design.mdc) | `**/*.py` | Architecture, reliability, security, API contracts, concurrency, observability, dependencies, and configuration |
 | [`testing.mdc`](testing.mdc) | `**/test_*.py`, `**/*_test.py`, `**/tests/**/*.py` | pytest testing rules and test quality standards |
 | [`data-analysis.mdc`](data-analysis.mdc) | `**/*.py`, `**/*.ipynb` | Data analysis, statistics, visualization, and notebook conventions |
 

@@ -1,33 +1,109 @@
 # cursor-rule
 
-Personal AI coding rules for engineering workflow, Python development, testing, and data analysis.
+Personal AI coding standards for engineering workflow, Python development, testing, and data analysis.
 
 Works with [Cursor](https://cursor.com), [Claude Code](https://code.claude.com/docs), [Google Antigravity](https://antigravity.google/), and [OpenAI Codex](https://openai.com/codex/).
 
-## Rules
+## Layout
 
-| File | Scope | Description |
-|------|-------|-------------|
-| [`engineering-standards.mdc`](engineering-standards.mdc) | Always | Change planning, documentation, git hygiene, anti-patterns, and definition of done |
-| [`python-style.mdc`](python-style.mdc) | `**/*.py` | Language, clean code, naming, functions, modules, classes, and Python conventions |
-| [`system-design.mdc`](system-design.mdc) | `**/*.py` | Architecture, reliability, security, API contracts, concurrency, observability, dependencies, and configuration |
-| [`testing.mdc`](testing.mdc) | `**/test_*.py`, `**/*_test.py`, `**/tests/**/*.py` | pytest testing rules and test quality standards |
-| [`data-analysis.mdc`](data-analysis.mdc) | `**/*.py`, `**/*.ipynb` | Data analysis, statistics, visualization, and notebook conventions |
-
-## Install
-
-### Cursor
-
-Copy the `.mdc` files into the target project's `.cursor/rules/` directory:
-
-```bash
-mkdir -p /path/to/project/.cursor/rules
-cp *.mdc /path/to/project/.cursor/rules/
+```text
+cursor-rule/
+├── shared/                 # Source-of-truth rule bodies (no tool frontmatter)
+├── cursor/                 # Cursor .mdc packages
+├── claude/                 # Claude Code .md packages (paths frontmatter)
+├── antigravity/            # Antigravity .md packages (trigger frontmatter)
+├── codex/
+│   ├── AGENTS.md           # Global personal instructions for ~/.codex/
+│   ├── config.toml         # developer_instructions
+│   ├── rules/              # Full rule library for reference / project use
+│   └── project-python/     # Template AGENTS.md for Python repos
+└── install.sh
 ```
 
-Or add them as user rules in Cursor settings.
+## Shared rules
 
-Cursor frontmatter example:
+| File | Scope intent | Description |
+|------|--------------|-------------|
+| [`shared/engineering-standards.md`](shared/engineering-standards.md) | Always | Change planning, documentation, git hygiene, anti-patterns, DoD |
+| [`shared/python-style.md`](shared/python-style.md) | Python | Language, clean code, naming, functions, modules, classes |
+| [`shared/system-design.md`](shared/system-design.md) | Python | Architecture, reliability, security, API contracts, concurrency |
+| [`shared/testing.md`](shared/testing.md) | Tests | pytest testing rules and test quality standards |
+| [`shared/data-analysis.md`](shared/data-analysis.md) | Analysis | Data analysis, statistics, visualization, notebooks |
+
+## Quick install
+
+```bash
+./install.sh cursor /path/to/project
+./install.sh claude /path/to/project
+./install.sh antigravity /path/to/project
+./install.sh codex
+./install.sh codex-project /path/to/python-project
+./install.sh all /path/to/project
+```
+
+`CODEX_HOME` defaults to `~/.codex`.
+
+## Codex (recommended hierarchy)
+
+Codex scopes instructions by **directory hierarchy**, not Cursor-style globs.
+
+It loads `$CODEX_HOME/AGENTS.md` first, then project / nested `AGENTS.md` files. More specific directories win.
+
+```text
+~/.codex/config.toml          # how Codex should work
+~/.codex/AGENTS.md            # your global engineering habits
+~/.codex/rules/               # full library (reference; copy into projects as needed)
+project/AGENTS.md             # this repo's stack and conventions
+src/special-module/AGENTS.md  # optional domain-specific constraints
+```
+
+### Global personal rules
+
+```bash
+./install.sh codex
+```
+
+This installs:
+
+```text
+~/.codex/
+├── AGENTS.md      # curated from engineering-standards (language-agnostic)
+├── config.toml    # implementation-first developer_instructions
+└── rules/         # full shared library for project reuse
+```
+
+Do **not** dump every Python-specific rule into the global `AGENTS.md`. Global instructions should stay language-agnostic; otherwise Codex may apply Python conventions while editing TypeScript.
+
+### Python project rules
+
+```bash
+./install.sh codex-project /path/to/python-project
+```
+
+Creates a concise project `AGENTS.md` that assumes the global personal instructions and adds Python / architecture / testing guidance.
+
+For deeper detail, point the project at `$CODEX_HOME/rules/` or copy selected files from `shared/`.
+
+### Manual fallback
+
+```bash
+mkdir -p ~/.codex
+curl -L \
+  https://raw.githubusercontent.com/poirotw66/cursor-rule/main/codex/AGENTS.md \
+  -o ~/.codex/AGENTS.md
+```
+
+That is a minimal “works now” install. Prefer `./install.sh codex` so `config.toml` and `rules/` are included.
+
+## Cursor
+
+```bash
+./install.sh cursor /path/to/project
+```
+
+Copies `cursor/*.mdc` into `.cursor/rules/`.
+
+Cursor can scope with globs:
 
 ```yaml
 ---
@@ -38,123 +114,46 @@ alwaysApply: true
 ---
 ```
 
-### Claude Code
-
-Claude Code reads project memory from `CLAUDE.md` (or `.claude/CLAUDE.md`) and modular rules from `.claude/rules/*.md`.
-
-Recommended for this repo: copy into `.claude/rules/` as `.md` files.
+## Claude Code
 
 ```bash
-mkdir -p /path/to/project/.claude/rules
-cp engineering-standards.mdc /path/to/project/.claude/rules/engineering-standards.md
-cp python-style.mdc /path/to/project/.claude/rules/python-style.md
-cp system-design.mdc /path/to/project/.claude/rules/system-design.md
-cp testing.mdc /path/to/project/.claude/rules/testing.md
-cp data-analysis.mdc /path/to/project/.claude/rules/data-analysis.md
+./install.sh claude /path/to/project
 ```
 
-Then convert frontmatter:
+Copies `claude/*.md` into `.claude/rules/`.
 
-| This repo (Cursor) | Claude Code |
-|--------------------|-------------|
-| `alwaysApply: true` (no path scope) | omit `paths` (loads at launch) |
-| `globs: ["**/*.py"]` | `paths:` with the same patterns |
+| This repo intent | Claude Code |
+|------------------|-------------|
+| Always-on | omit `paths` |
+| File-scoped | `paths:` globs |
 
-Always-on (no path filter):
-
-```yaml
----
-description: Engineering workflow and definition of done
----
-```
-
-Path-scoped:
-
-```yaml
----
-description: Python style and clean code
-paths:
-  - "**/*.py"
----
-```
-
-```yaml
----
-description: pytest testing rules
-paths:
-  - "**/test_*.py"
-  - "**/*_test.py"
-  - "**/tests/**/*.py"
----
-```
-
-Alternatively, merge selected rule bodies into a single `/path/to/project/CLAUDE.md`.
-
-Personal rules for every project: `~/.claude/CLAUDE.md` or `~/.claude/rules/`.
+Personal global rules: `~/.claude/CLAUDE.md` or `~/.claude/rules/`.
 
 See the [Claude Code memory docs](https://code.claude.com/docs/en/memory).
 
-### Antigravity
-
-Antigravity reads workspace rules from `.agents/rules/` (`.agent/rules/` is still supported). Rules must be `.md` files with Antigravity frontmatter.
-
-1. Copy the rule contents into the target project.
-2. Rename `.mdc` → `.md`.
-3. Convert frontmatter:
-
-| This repo (Cursor) | Antigravity |
-|--------------------|-------------|
-| `alwaysApply: true` | `trigger: always_on` |
-| `globs: ["**/*.py"]` | `trigger: glob` + `globs: "**/*.py"` |
-
-Example:
+## Antigravity
 
 ```bash
-mkdir -p /path/to/project/.agents/rules
-cp engineering-standards.mdc /path/to/project/.agents/rules/engineering-standards.md
-cp python-style.mdc /path/to/project/.agents/rules/python-style.md
-cp system-design.mdc /path/to/project/.agents/rules/system-design.md
-cp testing.mdc /path/to/project/.agents/rules/testing.md
-cp data-analysis.mdc /path/to/project/.agents/rules/data-analysis.md
+./install.sh antigravity /path/to/project
 ```
 
-Then edit each file's frontmatter. Always-on:
+Copies `antigravity/*.md` into `.agents/rules/` (`.agent/rules/` is still supported by Antigravity).
 
-```yaml
----
-trigger: always_on
-description: Engineering workflow and definition of done
----
-```
+| This repo intent | Antigravity |
+|------------------|-------------|
+| Always-on | `trigger: always_on` |
+| File-scoped | `trigger: glob` + `globs` |
 
-Glob-scoped:
-
-```yaml
----
-trigger: glob
-description: Python style and clean code
-globs: "**/*.py"
----
-```
-
-You can also create rules from the IDE: Agent panel → `...` → Customizations → Rules → **+ Workspace**.
-
-Global Antigravity rules live in `~/.gemini/GEMINI.md`.
+Global Antigravity rules: `~/.gemini/GEMINI.md`.
 
 See the [Antigravity Rules docs](https://antigravity.google/docs/rules-workflows/).
 
-### Codex
+## Cross-tool guidance
 
-Codex primarily reads `AGENTS.md` at the project root (plain Markdown).
-
-1. Create `/path/to/project/AGENTS.md`.
-2. Paste the rule sections you want Codex to follow (or merge the `.mdc` bodies into one file).
-
-Cross-tool tip:
-
-- Keep shared conventions in `AGENTS.md` for Codex / Cursor / Antigravity / Claude Code where possible.
-- Put Antigravity-only overrides in `GEMINI.md` (takes precedence when both exist).
-- Put Claude Code-only overrides in `CLAUDE.md` or `.claude/rules/`.
+- Keep **shared/** as the source of truth for detailed conventions.
+- Keep **Codex global `AGENTS.md`** short and language-agnostic.
+- Put stack-specific rules in **project `AGENTS.md`** (Codex) or tool-native scoped rule files (Cursor / Claude / Antigravity).
+- Avoid duplicating the same rule in global + project files with conflicting wording.
 
 ## Conventions
 

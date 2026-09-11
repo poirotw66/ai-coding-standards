@@ -1,4 +1,4 @@
-# cursor-rule
+# ai-coding-standards
 
 Personal AI coding standards for engineering workflow, Python development, testing, and data analysis.
 
@@ -7,7 +7,7 @@ Works with [Cursor](https://cursor.com), [Claude Code](https://code.claude.com/d
 ## Layout
 
 ```text
-cursor-rule/
+ai-coding-standards/
 ├── shared/                 # Source-of-truth rule bodies (no tool frontmatter)
 ├── cursor/                 # Cursor .mdc packages
 ├── claude/                 # Claude Code .md packages (paths frontmatter)
@@ -89,7 +89,7 @@ For deeper detail, point the project at `$CODEX_HOME/rules/` or copy selected fi
 ```bash
 mkdir -p ~/.codex
 curl -L \
-  https://raw.githubusercontent.com/poirotw66/cursor-rule/main/codex/AGENTS.md \
+  https://raw.githubusercontent.com/poirotw66/ai-coding-standards/main/codex/AGENTS.md \
   -o ~/.codex/AGENTS.md
 ```
 
